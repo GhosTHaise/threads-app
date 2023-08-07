@@ -5,7 +5,7 @@ import LeftSideBar from "../components/shared/LeftSideBar";
 import RightSideBar from "../components/shared/RightSideBar";
 import BottomBar from "../components/shared/BottomBar";
 
-
+import "@/app/globals.css"
 
 export const metadata = {
     title : "Threads",
