@@ -1,8 +1,8 @@
+import Link from "next/link";
+import Image from "next/image";
 function TopBar(){
     return(
-        <h1>
-            TopBar
-        </h1>
+        <div></div>
     )
 }
 
