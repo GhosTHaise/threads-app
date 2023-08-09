@@ -1,8 +1,13 @@
+"use client"
 import { sidebarLinks } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname , useRouter} from "next/navigation";
 
 function LeftSideBar(){
+    const router = useRouter();
+    const pathname = usePathname();
+
     return(
         <section
             className="custom-scrollbar leftsidebar"
@@ -11,11 +16,14 @@ function LeftSideBar(){
                 className="flex w-full flex-1 flex-col gap-6 px-6"
             >
                 {
-                    sidebarLinks.map((link)=>(
+                    sidebarLinks.map((link)=>{
+                        const isActive  = (pathname.includes(link.route) && link.route.length > 1)
+                            || pathname == link.route;
+                        return (
                         <Link
                             key={link.label}
                             href={link.route}
-                            className="leftsidebar_link"
+                            className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
                         >
                             <Image 
                                 src={link.imgURL}
@@ -27,7 +35,7 @@ function LeftSideBar(){
                                 {link.label}
                             </p>
                         </Link>
-                    ))
+                    )})
                 }
             </div>
         </section>
