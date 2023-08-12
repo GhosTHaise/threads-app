@@ -1,4 +1,4 @@
-import AccountProfile from "@/app/components/forms/AccountProfile";
+import AccountProfile from "@/components/forms/AccountProfile";
 import { currentUser } from "@clerk/nextjs";
 import { userInfo } from "os";
 
