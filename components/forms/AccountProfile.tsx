@@ -97,7 +97,7 @@ const AccountProfile = ({user,btnTitle} : Props) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-3 w-full">
+            <FormItem className="flex flex-col w-full gap-3">
               <FormLabel className="text-base-semibold text-light-2">
                 Name
               </FormLabel>
@@ -115,7 +115,7 @@ const AccountProfile = ({user,btnTitle} : Props) => {
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-3 w-full">
+            <FormItem className="flex flex-col w-full gap-3">
               <FormLabel className="text-base-semibold text-light-2">
                 Username
               </FormLabel>
@@ -133,7 +133,7 @@ const AccountProfile = ({user,btnTitle} : Props) => {
           control={form.control}
           name="bio"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-3 w-full">
+            <FormItem className="flex flex-col w-full gap-3">
               <FormLabel className="text-base-semibold text-light-2">
                 Bio
               </FormLabel>
@@ -147,7 +147,7 @@ const AccountProfile = ({user,btnTitle} : Props) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button className="bg-primary-500" type="submit">Submit</Button>
       </form>
     </Form>
   )
