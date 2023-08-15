@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod"
 import { userValidation } from "@/lib/validations/user";
 import { Button } from "@/components/ui/button"
+import {useUploadThing} from "@/lib/uploadthing";
 import {
   Form,
   FormControl,
@@ -18,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
+import { isBase64Image } from "@/lib/utils";
 interface Props {
   user : {
     id : string;
@@ -55,6 +57,8 @@ const AccountProfile = ({user,btnTitle} : Props) => {
 
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
+
+        //change image using react-hook-form
         fieldChange(imageDataUrl);
       }
 
@@ -63,7 +67,13 @@ const AccountProfile = ({user,btnTitle} : Props) => {
     }
   }
   function onSubmit(values: z.infer<typeof userValidation>) {
+    const blob = values.profile_photo;
 
+    const hasImageChanged = isBase64Image(blob)
+
+    if(hasImageChanged){
+      //const imgRes = 
+    }
     console.log(values)
   }
 
