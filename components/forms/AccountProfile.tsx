@@ -34,6 +34,7 @@ interface Props {
 
 const AccountProfile = ({user,btnTitle} : Props) => {
   const [files, setFiles] = useState<File[]>([]);
+  const { startUpload } = useUploadThing("media");
   const form = useForm({
     resolver : zodResolver(userValidation),
     defaultValues : {
@@ -66,15 +67,21 @@ const AccountProfile = ({user,btnTitle} : Props) => {
 
     }
   }
-  function onSubmit(values: z.infer<typeof userValidation>) {
+  async function onSubmit(values: z.infer<typeof userValidation>) {
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob)
 
     if(hasImageChanged){
-      //const imgRes = 
+      const imgRes = await startUpload(files);
+
+      if(imgRes && imgRes[0].fileUrl){
+        values.profile_photo = imgRes[0].fileUrl;
+      }
     }
     console.log(values)
+
+    //TODO : Update User Profile
   }
 
 
