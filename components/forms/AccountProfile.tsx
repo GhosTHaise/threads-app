@@ -36,6 +36,7 @@ interface Props {
 
 const AccountProfile = ({user,btnTitle} : Props) => {
   const pathname = usePathname();
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
   const form = useForm({
@@ -94,6 +95,12 @@ const AccountProfile = ({user,btnTitle} : Props) => {
         path : pathname,
       }
     );
+
+    if(pathname == "/profile/edit"){
+      router.back();
+    }else{
+      router.push("/");
+    }
   }
 
   return (
