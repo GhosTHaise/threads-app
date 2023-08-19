@@ -45,8 +45,35 @@ const PostThread = ({userId} : {userId : String}) => {
       accuntId : userId
     }
   })
+
+  const onSubmit = () => {
+
+  }
+  
   return (
-    <h1>Post Thread Form</h1>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} 
+      className="flex flex-col justify-start gap-10">
+        <FormField
+          control={form.control}
+          name="thread"
+          render={({ field }) => (
+            <FormItem className="flex flex-col w-full gap-3">
+              <FormLabel className="text-base-semibold text-light-2">
+                Content
+              </FormLabel>
+              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1 text-gray-200">
+                <Textarea 
+                  rows={15}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage/>
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
   )
 }
 
