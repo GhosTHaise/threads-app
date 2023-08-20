@@ -46,8 +46,8 @@ const PostThread = ({userId} : {userId : String}) => {
     }
   })
 
-  const onSubmit = () => {
-
+  const onSubmit = async () => {
+    //await createTread();
   }
   
   return (
@@ -76,7 +76,7 @@ const PostThread = ({userId} : {userId : String}) => {
           type="submit"
           className="bg-primary-500"
         >
-          Post Thread
+          Post Thread 
         </Button>
       </form>
     </Form>
