@@ -63,3 +63,35 @@ export async function createThread({
         throw new Error(`Error creating thread : ${error.message}`)
     }
 }
+export async function fetchThreadById(id : string){
+    connectToDb();
+    try {
+        //TODO poulte community
+        const thread = await Thread.findById(id).populate({
+            path : "author",
+            model : User,
+            select : "_id id name image"
+        }).populate({
+            path : "children",
+            populate : [
+                {
+                    path : "author",
+                    model : User,
+                    select : "_id id name image"
+                },
+                {
+                    path : "children",
+                    model : Thread,
+                    populate : {
+                        path : 'author',
+                        model : User,
+                        select : "_id id name parentId image"
+                    }
+                }
+            ]
+        }).exec();
+        return thread;
+    } catch (error : any) {
+        throw new Error(`Error fetching thread : ${error.message}`)
+    }
+}
