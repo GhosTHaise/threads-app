@@ -4,6 +4,7 @@ import { fetchUser } from '@/lib/actions/user.action';
 import { redirect } from 'next/navigation';
 import { fetchThreadById } from '@/lib/actions/thread.action';
 import ThreadCard from '@/components/cards/ThreadCard';
+import Comment from '@/components/forms/Comment';
 const Page = async ({params} : {params : { id : string}}) => {
     if(!params) return null;
 
@@ -16,6 +17,7 @@ const Page = async ({params} : {params : { id : string}}) => {
     const thread = await fetchThreadById(params.id);
     return (
         <section className='relative'>
+            <div>
             <ThreadCard
                 key={thread._id}
                 id={thread._id}
@@ -27,6 +29,14 @@ const Page = async ({params} : {params : { id : string}}) => {
                 createdAt={thread.createdAt}
                 comments={thread.children}
                 />
+            </div>
+            <div className='mt-7'>
+                <Comment
+                    threadId={thread.id}
+                    currentUserImg={user.imageUrl}
+                    currentUserId={JSON.stringify(userInfo._id)}
+                />
+            </div>
         </section>
   )
 }
