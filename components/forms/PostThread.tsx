@@ -13,13 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import Image from "next/image";
+
 import { Textarea } from "../ui/textarea";
 import { usePathname , useRouter } from "next/navigation";
-
-import { updateUser } from "@/lib/actions/user.action";
-import { userValidation } from "@/lib/validations/user";
 import { threadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.action";
 interface Props {
