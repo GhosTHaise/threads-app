@@ -16,6 +16,7 @@ import {
 import { Input } from "../ui/input";
 import { usePathname , useRouter } from "next/navigation";
 import { commentValidation } from "@/lib/validations/thread";
+import Image from "next/image";
 //import { createThread } from "@/lib/actions/thread.action";
 
 interface Props {
@@ -49,18 +50,27 @@ const Comment = ({
         router.push("/")
       }
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
-                className="mt-10 flex flex-col justify-start gap-10">
+        <Form 
+            {...form}
+        >
+            <form 
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="comment-form">
                 <FormField
                     control={form.control}
                     name="thread"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col w-full gap-3">
-                            <FormLabel className="text-base-semibold text-light-2">
-                                Content
+                        <FormItem className="flex items-center w-full gap-3">
+                            <FormLabel >
+                                <Image
+                                    src={currentUserImg}
+                                    alt="Profile image"
+                                    width={48}
+                                    height={48}
+                                    className="rounded-full object-cover"
+                                />
                             </FormLabel>
-                            <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1 text-gray-200">
+                            <FormControl className="border-none bg-transparent">
                                 <Input
                                     type="text"
                                     placeholder="Comment..."
@@ -68,15 +78,14 @@ const Comment = ({
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
                 <Button
                     type="submit"
-                    className="bg-primary-500"
+                    className="comment-form_btn"
                 >
-                    Post Thread
+                    Reply
                 </Button>
             </form>
         </Form>
