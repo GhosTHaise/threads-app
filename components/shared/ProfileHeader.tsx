@@ -28,7 +28,7 @@ const ProfileHeader = ({
                             fill
                             className="rounded-full object-cover shadow-2xl"
                         />
-                    </div>
+                    </div>f
                 </div>
             </div>
         </div>
