@@ -3,6 +3,7 @@
 import { connectToDb } from "../mongoose"
 import User from "../modals/user.model";
 import { revalidatePath } from "next/cache";
+import Thread from "../modals/thread.model";
 
 interface Params {
     userId : string,
