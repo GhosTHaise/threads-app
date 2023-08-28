@@ -44,7 +44,7 @@ export async function updateUser(
             revalidatePath(path);
         }
     } catch (error : any) {
-        throw new Error(`Failed to create/update user : ${error.message}`)
+        throw new Error(`Failed to create/update user : ${error.message}`);
     }
 }
 
@@ -59,5 +59,32 @@ export async function fetchUser(userId : String){
         //});
     } catch (error : any) {
         throw new Error(`Failed to fetch user : ${error.message}`)
+    }
+}
+
+export async function fetchUserPosts(userId : String){
+    try {
+        connectToDb();
+
+        //find all threads athored by user with the given id
+
+        //TODO "Populate community"
+        const threads = await User.findOne({ id : userId})
+                .populate({
+                    path : "threads",
+                    model : Thread
+                }).populate({
+                    path : "children",
+                    model : Thread,
+                    populate  : {
+                        path : "author",
+                        model : User,
+                        select : "name image id"
+                    }
+                })
+
+            return threads;
+    } catch (error : any) {
+        throw new Error(`Failed to create/update user : ${error.message}`);
     }
 }
