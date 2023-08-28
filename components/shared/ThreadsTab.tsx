@@ -31,7 +31,7 @@ const ThreadsTab = async({
                             accountType == "User"
                                 ? 
                             { name : result.name,image : result.image,id : result.id} 
-                                : 
+                                 : 
                             { name : thread.author.name , image : thread.author.image , id : thread.author.id}
                         }
                         community={thread.community}
