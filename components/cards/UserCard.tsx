@@ -15,7 +15,9 @@ const UserCard = ({
     personType
 } : Props) => {
   return (
-    <div>UserCard</div>
+    <article className='user-card'>
+        UserCard
+    </article>
   )
 }
 
