@@ -4,6 +4,7 @@ import { connectToDb } from "../mongoose"
 import User from "../modals/user.model";
 import { revalidatePath } from "next/cache";
 import Thread from "../modals/thread.model";
+import { FilterQuery, SortOrder } from "mongoose";
 
 interface Params {
     userId : string,
@@ -58,7 +59,44 @@ export async function fetchUser(userId : String){
         //    model : Community
         //});
     } catch (error : any) {
-        throw new Error(`Failed to fetch user : ${error.message}`)
+        throw new Error(`Failed to fetch user : ${error.message}`);
+    }
+}
+
+export async function fetchUsers({
+    userId,
+    searchString = "",
+    pageNumber = 1,
+    pageSize = 20,
+    sortBy = "desc"
+} : {
+    userId : string;
+    searchString? : string;
+    pageNumber? : number;
+    pageSize? : number;
+    sortBy? : SortOrder;
+}){
+    try {
+        connectToDb();
+
+        const skipAccount = (pageNumber - 1) * pageSize;
+
+        const regex = new RegExp(searchString,"i");
+
+        const query : FilterQuery<typeof User>= {
+            id  : {
+                $ne : userId
+            }
+        }
+
+        if(searchString.trim() !== ""){
+            query.$or = [
+                { username : { $regex : regex}},
+                { name : { $regex : regex}}
+            ]
+        }
+    } catch (error : any) {
+        throw new Error(`Failed to fetch user : ${error.message}`);
     }
 }
 
