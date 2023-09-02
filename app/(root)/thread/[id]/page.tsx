@@ -1,11 +1,11 @@
 import React from 'react'
 import { currentUser } from '@clerk/nextjs';
-import { fetchUser } from '@/lib/actions/user.action';
+import { fetchUser } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
-import { fetchThreadById } from '@/lib/actions/thread.action';
+import { fetchThreadById } from '@/lib/actions/thread.actions';
 import ThreadCard from '@/components/cards/ThreadCard';
 import Comment from '@/components/forms/Comment';
-import Thread from '@/lib/modals/thread.model';
+import Thread from '@/lib/models/thread.model';
 const Page = async ({params} : {params : { id : string}}) => {
     if(!params) return null;
 

@@ -20,7 +20,7 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { isBase64Image } from "@/lib/utils";
-import { updateUser } from "@/lib/actions/user.action";
+import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname , useRouter } from "next/navigation";
 interface Props {
   user : {

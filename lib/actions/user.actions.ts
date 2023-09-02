@@ -1,9 +1,9 @@
 "use server"
 
 import { connectToDb } from "../mongoose"
-import User from "../modals/user.model";
+import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
-import Thread from "../modals/thread.model";
+import Thread from "../models/thread.model";
 import { FilterQuery, SortOrder } from "mongoose";
 
 interface Params {
