@@ -49,7 +49,7 @@ export async function createThread({
         const createdTread = await  Thread.create({
             text,
             author,
-            community : null
+            community : communityId
         });
         // Update User model
         console.log("=>",author)
