@@ -63,21 +63,36 @@ const Page = async ({params} : { params : {id : string}}) => {
                             ))
                         }
                     </TabsList>
-                    {
-                        communityTabs.map((tab)=>(
                             <TabsContent
-                                key={`content-${tab.label}`}
-                                value={tab.value}
+                                value="threads"
                                 className="w-full text-light-1"
                             >
                                 <ThreadsTab 
                                     currentUserId={user.id}
                                     accountId={communityDetails.id}
-                                    accountType="User"
+                                    accountType="Community"
                                 />
                             </TabsContent>
-                        ))
-                    }
+                            <TabsContent
+                                value="members"
+                                className="w-full text-light-1"
+                            >
+                                <ThreadsTab 
+                                    currentUserId={user.id}
+                                    accountId={communityDetails.id}
+                                    accountType="Community"
+                                />
+                            </TabsContent>
+                            <TabsContent
+                                value="requests"
+                                className="w-full text-light-1"
+                            >
+                                <ThreadsTab 
+                                    currentUserId={user.id}
+                                    accountId={communityDetails.id}
+                                    accountType="Community"
+                                />
+                            </TabsContent>
                 </Tabs>
             </div>
         </section>
