@@ -1,4 +1,4 @@
-import { fetchUser, getActivities} from "@/lib/actions/user.actions";
+import { fetchUser, getActivity} from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +11,7 @@ const Page = async () => {
     if(!userInfo?.onboarded) redirect('/onboarding');
 
     //get activities
-    const activity = await getActivities(userInfo._id);
+    const activity = await getActivity(userInfo._id);
   return (
     <section>
         <h1 className='head-text mb-10'>
