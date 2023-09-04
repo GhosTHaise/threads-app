@@ -122,8 +122,8 @@ const ThreadCard = ({
                 {/* TODO  : Delete Thread */}
                 {/* TODO  : Show Comment Logos */}
 
-                { console.log("Community",community)}
-                {
+            </div>
+            {
                     !isComment && community && (
                         <Link
                             href={`/communities/${community.id}`}
@@ -132,7 +132,7 @@ const ThreadCard = ({
                             <p className="text-subtle-medium text-gray-1">
                                     {
                                         formatDateString(createdAt)
-                                    }
+                                    }{" "}
                                     - { community.name} Community
                             </p>
                             <Image
@@ -145,7 +145,6 @@ const ThreadCard = ({
                         </Link>
                     )
                 }
-            </div>
         </article>
     )
 }
