@@ -1,174 +1,174 @@
-"use server"
+"use server";
 
-import { connectToDb } from "../mongoose"
-import User from "../models/user.model";
-import { revalidatePath } from "next/cache";
-import Thread from "../models/thread.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import { revalidatePath } from "next/cache";
 
-interface Params {
-    userId : string,
-    username : string,
-    name : string,
-    bio : string,
-    image : string,
-    path : string
+import Community from "@/lib/models/community.model";
+import Thread from "@/lib/models/thread.model";
+import User from "@/lib/models/user.model";
+
+import { connectToDb } from "../mongoose";
+
+export async function fetchUser(userId: string) {
+  try {
+    connectToDb();
+
+    return await User.findOne({ id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
 }
+
 export async function updateUser(
-    {
-        userId ,
-        username ,
-        name ,
-        bio ,
-        image ,
-        path 
-    } : Params
-    ) : Promise<void>{
-    try {
-        connectToDb();
+  username: string,
+  name: string,
+  bio: string,
+  image: string,
+  userId: string,
+  path: string
+): Promise<void> {
+  try {
+    connectToDb();
 
-        await User.findOneAndUpdate(
-            { id : userId},
-            {
-                username : username.toLocaleLowerCase(),
-                name,
-                bio,
-                image,
-                onboarded : true
-            },
-            {
-                upsert : true
-            }
-        );
+    await User.findOneAndUpdate(
+      { id: userId },
+      {
+        username: username.toLowerCase(),
+        name,
+        bio,
+        image,
+        onboarded: true,
+      },
+      { upsert: true }
+    );
 
-        if(path === "/profile/edit"){
-            revalidatePath(path);
-        }
-    } catch (error : any) {
-        throw new Error(`Failed to create/update user : ${error.message}`);
+    if (path === "/profile/edit") {
+      revalidatePath(path);
     }
+  } catch (error: any) {
+    throw new Error(`Failed to create/update user: ${error.message}`);
+  }
 }
 
-export async function fetchUser(userId : String){
-    try {
-        connectToDb();
+export async function fetchUserPosts(userId: string) {
+  try {
+    connectToDb();
 
-        return await User.findOne({id : userId})
-        //.populate({
-        //    path : 'communities',
-        //    model : Community
-        //});
-    } catch (error : any) {
-        throw new Error(`Failed to fetch user : ${error.message}`);
-    }
+    // Find all threads authored by the user with the given userId
+    const threads = await User.findOne({ id: userId }).populate({
+      path: "threads",
+      model: Thread,
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        },
+        {
+          path: "children",
+          model: Thread,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name image id", // Select the "name" and "_id" fields from the "User" model
+          },
+        },
+      ],
+    });
+    return threads;
+  } catch (error) {
+    console.error("Error fetching user threads:", error);
+    throw error;
+  }
 }
 
+// Almost similar to Thead (search + pagination) and Community (search + pagination)
 export async function fetchUsers({
-    userId,
-    searchString = "",
-    pageNumber = 1,
-    pageSize = 20,
-    sortBy = "desc"
-} : {
-    userId : string;
-    searchString? : string;
-    pageNumber? : number;
-    pageSize? : number;
-    sortBy? : SortOrder;
-}){
-    try {
-        connectToDb();
+  userId,
+  searchString = "",
+  pageNumber = 1,
+  pageSize = 20,
+  sortBy = "desc",
+}: {
+  userId: string;
+  searchString?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: SortOrder;
+}) {
+  try {
+    connectToDb();
 
-        const skipAmount = (pageNumber - 1) * pageSize;
+    // Calculate the number of users to skip based on the page number and page size.
+    const skipAmount = (pageNumber - 1) * pageSize;
 
-        const regex = new RegExp(searchString,"i");
+    // Create a case-insensitive regular expression for the provided search string.
+    const regex = new RegExp(searchString, "i");
 
-        const query : FilterQuery<typeof User>= {
-            id  : {
-                $ne : userId
-            }
-        }
+    // Create an initial query object to filter users.
+    const query: FilterQuery<typeof User> = {
+      id: { $ne: userId }, // Exclude the current user from the results.
+    };
 
-        if(searchString.trim() !== ""){
-            query.$or = [
-                { username : { $regex : regex}},
-                { name : { $regex : regex}}
-            ]
-        }
-
-        const sortOptions = {
-            createdAt : sortBy
-        };
-
-        const usersQuery = User.find(query)
-                        .sort(sortOptions)
-                        .skip(skipAmount)
-                        .limit(pageSize);
-                        
-        const totalUsersCount = await  User.countDocuments(query);
-        
-        const users = await usersQuery.exec();
-
-        const isNext = totalUsersCount > skipAmount + users.length;
-
-        return {users,isNext};
-    } catch (error : any) {
-        throw new Error(`Failed to fetch user : ${error.message}`);
+    // If the search string is not empty, add the $or operator to match either username or name fields.
+    if (searchString.trim() !== "") {
+      query.$or = [
+        { username: { $regex: regex } },
+        { name: { $regex: regex } },
+      ];
     }
+
+    // Define the sort options for the fetched users based on createdAt field and provided sort order.
+    const sortOptions = { createdAt: sortBy };
+
+    const usersQuery = User.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    // Count the total number of users that match the search criteria (without pagination).
+    const totalUsersCount = await User.countDocuments(query);
+
+    const users = await usersQuery.exec();
+
+    // Check if there are more users beyond the current page.
+    const isNext = totalUsersCount > skipAmount + users.length;
+
+    return { users, isNext };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
 }
 
-export async function getActivities(userId : string){
-    try {
-        connectToDb();
+export async function getActivity(userId: string) {
+  try {
+    connectToDb();
 
-        //find all threads
-        const userTreads = await Thread.find({ author : userId});
-        
-        //collect all the child threads ids (replies) from the 'children' field
-        const childThreadIds = userTreads.reduce((acc,userThread) => {
-            return acc.concat(userThread.children)
-        },[]);
+    // Find all threads created by the user
+    const userThreads = await Thread.find({ author: userId });
 
-        const replies = await Thread.find({
-            _id : { $in : childThreadIds},
-            author : { $ne : userId}
-        }).populate({
-            path : "author",
-            model : User,
-            select : "name image _id"
-        });
+    // Collect all the child thread ids (replies) from the 'children' field of each user thread
+    const childThreadIds = userThreads.reduce((acc, userThread) => {
+      return acc.concat(userThread.children);
+    }, []);
 
-        return replies;
+    // Find and return the child threads (replies) excluding the ones created by the same user
+    const replies = await Thread.find({
+      _id: { $in: childThreadIds },
+      author: { $ne: userId }, // Exclude threads authored by the same user
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id",
+    });
 
-    } catch (error : any) {
-        throw new Error(`Failed to fetch user : ${error.message}`);
-    }
-}
-
-export async function fetchUserPosts(userId : String){
-    try {
-        connectToDb();
-
-        //find all threads athored by user with the given id
-
-        //TODO "Populate community"
-        const threads = await User.findOne({ id : userId})
-                .populate({
-                    path : "threads",
-                    model : Thread,
-                    populate : {
-                        path : "children",
-                        model : Thread,
-                        populate  : {
-                            path : "author",
-                            model : User,
-                            select : "name image id"
-                        }
-                    }
-                });
-
-            return threads;
-    } catch (error : any) {
-        throw new Error(`Failed to create/update user : ${error.message}`);
-    }
+    return replies;
+  } catch (error) {
+    console.error("Error fetching replies: ", error);
+    throw error;
+  }
 }
