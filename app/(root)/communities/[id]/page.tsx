@@ -6,6 +6,7 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { Tabs , TabsContent , TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
+import UserCard from "@/components/cards/UserCard";
 
 
 const Page = async ({params} : { params : {id : string}}) => {
@@ -69,7 +70,7 @@ const Page = async ({params} : { params : {id : string}}) => {
                             >
                                 <ThreadsTab 
                                     currentUserId={user.id}
-                                    accountId={communityDetails.id}
+                                    accountId={communityDetails._id}
                                     accountType="Community"
                                 />
                             </TabsContent>
@@ -77,11 +78,21 @@ const Page = async ({params} : { params : {id : string}}) => {
                                 value="members"
                                 className="w-full text-light-1"
                             >
-                                <ThreadsTab 
-                                    currentUserId={user.id}
-                                    accountId={communityDetails.id}
-                                    accountType="Community"
-                                />
+                                <section 
+                                    className="mt-9 flex flex-col gap-10">
+                                        {
+                                            communityDetails?.members.map((member : any) => (
+                                                <UserCard
+                                                    key={member.id}
+                                                    id={member.id}
+                                                    name={member.name}
+                                                    username={member.username}
+                                                    imgUrl={member.image}
+                                                    personType="User"
+                                                />
+                                            ))
+                                        }
+                                </section>
                             </TabsContent>
                             <TabsContent
                                 value="requests"

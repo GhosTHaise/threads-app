@@ -26,7 +26,7 @@ const UserCard = ({
               alt='logo'
               height={48}
               width={48}
-              className='rounded-full'
+              className='rounded-full min-h-[48px] min-w-[48px] object-cover'
             />
             <div className='flex-1 text-ellipsis'>
                 <h4 className='text-base-semibold text-light-1'>
