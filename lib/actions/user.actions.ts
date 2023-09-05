@@ -9,6 +9,14 @@ import User from "@/lib/models/user.model";
 
 import { connectToDb } from "../mongoose";
 
+interface Params {
+  username: string;
+  name: string;
+  bio: string;
+  image: string;
+  userId: string;
+  path: string;
+}
 export async function fetchUser(userId: string) {
   try {
     connectToDb();
@@ -23,13 +31,14 @@ export async function fetchUser(userId: string) {
 }
 
 export async function updateUser(
-  username: string,
-  name: string,
-  bio: string,
-  image: string,
-  userId: string,
-  path: string
-): Promise<void> {
+ { 
+    username,
+    name,
+    bio,
+    image,
+    userId,
+    path
+} : Params): Promise<void> {
   try {
     connectToDb();
 
